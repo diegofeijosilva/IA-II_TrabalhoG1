@@ -1,25 +1,42 @@
 package com.trabalho.model;
 
 public class NeuronioLetra {
-	// Neuronio para 12 entradas
-
+	
 	private double w0; // pesos
 
 	// Representa as 64 entradas - Matriz de 8 x 8
 	private Double w[] = new Double[64];
+	
+	public NeuronioLetra() {
+		
+		for(int i=0; i < 64; i++){
+			w[i] = (double) 0;
+		}
+		
+	}
 
-	public double calculaV(Double x[]) {
-
+	public double calculaV(int x[][]) {
+		
 		Double soma = (double) 0;
-		for (int i = 0; i < x.length; i++) {
-			soma = soma + (w[i] * x[i]);
+		int posW = -1;
+		
+		// Percorre as linhas da matriz
+		for(int i=0; i < 8; i++){
+			for(int j=0; j < 8; j++){
+				
+				posW++; // próximo peso
+				
+				soma = soma + (w[posW] * x[j][i]);
+				
+			}
+			
 		}
 
 		return w0 + soma;
 
 	}
 
-	public int calculaY(Double x[]) { // aplica a função
+	public int calculaY(int x[][]) { // aplica a função
 
 		double v = calculaV(x);
 
@@ -29,7 +46,12 @@ public class NeuronioLetra {
 	}
 
 	public String toString() {
-		return "w0 = " + w0;
+		String ret = "Pesos: W[0]="+getW0();
+		for(int i=0; i < 64; i++){
+			ret = ret + ",W[" +i+ "]=" + w[i];
+		}
+		
+		return ret;
 	}
 
 	public double getW0() {
