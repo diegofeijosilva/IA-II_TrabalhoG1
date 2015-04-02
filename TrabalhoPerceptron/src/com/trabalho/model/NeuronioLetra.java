@@ -2,12 +2,16 @@ package com.trabalho.model;
 
 public class NeuronioLetra {
 	
-	private double w0; // pesos
+	private String nome;
+	
+	private double w0 = 1; // pesos
 
 	// Representa as 64 entradas - Matriz de 8 x 8
 	private Double w[] = new Double[64];
 	
-	public NeuronioLetra() {
+	public NeuronioLetra(String nome) {
+		
+		this.nome = nome;
 		
 		for(int i=0; i < 64; i++){
 			w[i] = (double) 0;
@@ -15,7 +19,7 @@ public class NeuronioLetra {
 		
 	}
 
-	public double calculaV(int x[][]) {
+	public double calculaV(double x0, int x[][]) {
 		
 		Double soma = (double) 0;
 		int posW = -1;
@@ -32,13 +36,13 @@ public class NeuronioLetra {
 			
 		}
 
-		return w0 + soma;
+		return (w0*x0) + soma;
 
 	}
 
-	public int calculaY(int x[][]) { // aplica a função
+	public int calculaY(double x0, int x[][]) { // aplica a função
 
-		double v = calculaV(x);
+		double v = calculaV(x0, x);
 
 		if (v >= 0)
 			return 1;
@@ -46,7 +50,7 @@ public class NeuronioLetra {
 	}
 
 	public String toString() {
-		String ret = "Pesos: W[0]="+getW0();
+		String ret = this.nome+" - Pesos: W[0]="+getW0();
 		for(int i=0; i < 64; i++){
 			ret = ret + ",W[" +i+ "]=" + w[i];
 		}
@@ -69,5 +73,15 @@ public class NeuronioLetra {
 	public void setW(Double[] w) {
 		this.w = w;
 	}
+
+	public String getNome() {
+		return nome;
+	}
+
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
+	
+	
 
 }
