@@ -4,7 +4,7 @@ public class NeuronioLetra {
 	
 	private String nome;
 	
-	private double w0 = 1; // pesos
+	private double w0 = 1d; // pesos
 
 	// Representa as 64 entradas - Matriz de 8 x 8
 	private Double w[] = new Double[64];

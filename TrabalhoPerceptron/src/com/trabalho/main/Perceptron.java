@@ -24,7 +24,10 @@ public class Perceptron {
 	static NeuronioLetra neuronio03 = new NeuronioLetra("Neuronio03");
 	static NeuronioLetra neuronio04 = new NeuronioLetra("Neuronio04");
 	static NeuronioLetra neuronio05 = new NeuronioLetra("Neuronio05");
-
+	
+	// eta é a constante (taxa) de aprendizagem
+	static double eta = 0.00001d;
+	
 	public static void main(String args[]) {
 
 		int letra[][] = new int[8][8]; // ENTRADA
@@ -91,6 +94,70 @@ public class Perceptron {
 		letra = populaMatriz(leArquivo(Arquivos.getDirLetraG()));
 		treinar(letra, 0, neuronio01);
 		treinar(letra, 0, neuronio02);
+		treinar(letra, 1, neuronio03);
+		treinar(letra, 1, neuronio04);
+		treinar(letra, 0, neuronio05);
+		
+		// Letra H =	0	0	1	1	1
+		letra = populaMatriz(leArquivo(Arquivos.getDirLetraH()));
+		treinar(letra, 0, neuronio01);
+		treinar(letra, 0, neuronio02);
+		treinar(letra, 1, neuronio03);
+		treinar(letra, 1, neuronio04);
+		treinar(letra, 1, neuronio05);
+		
+		// Letra I = 0	1	0	0	0
+		letra = populaMatriz(leArquivo(Arquivos.getDirLetraI()));
+		treinar(letra, 0, neuronio01);
+		treinar(letra, 1, neuronio02);
+		treinar(letra, 0, neuronio03);
+		treinar(letra, 0, neuronio04);
+		treinar(letra, 0, neuronio05);
+		
+		// Letra J =	0	1	0	0	1
+		letra = populaMatriz(leArquivo(Arquivos.getDirLetraJ()));
+		treinar(letra, 0, neuronio01);
+		treinar(letra, 1, neuronio02);
+		treinar(letra, 0, neuronio03);
+		treinar(letra, 0, neuronio04);
+		treinar(letra, 1, neuronio05);
+		
+		// Letra K = 0	1	0	1	0
+		letra = populaMatriz(leArquivo(Arquivos.getDirLetraK()));
+		treinar(letra, 0, neuronio01);
+		treinar(letra, 1, neuronio02);
+		treinar(letra, 0, neuronio03);
+		treinar(letra, 1, neuronio04);
+		treinar(letra, 0, neuronio05);
+		
+		// Letra L = 0	1	0	1	1
+		letra = populaMatriz(leArquivo(Arquivos.getDirLetraL()));
+		treinar(letra, 0, neuronio01);
+		treinar(letra, 1, neuronio02);
+		treinar(letra, 0, neuronio03);
+		treinar(letra, 1, neuronio04);
+		treinar(letra, 1, neuronio05);
+		
+		// Letra M = 0	1	1	0	0
+		letra = populaMatriz(leArquivo(Arquivos.getDirLetraM()));
+		treinar(letra, 0, neuronio01);
+		treinar(letra, 1, neuronio02);
+		treinar(letra, 1, neuronio03);
+		treinar(letra, 0, neuronio04);
+		treinar(letra, 0, neuronio05);
+		
+		// Letra N = 0	1	1	0	1
+		letra = populaMatriz(leArquivo(Arquivos.getDirLetraN()));
+		treinar(letra, 0, neuronio01);
+		treinar(letra, 1, neuronio02);
+		treinar(letra, 1, neuronio03);
+		treinar(letra, 0, neuronio04);
+		treinar(letra, 1, neuronio05);
+		
+		// Letra O = 0	1	1	1	0
+		letra = populaMatriz(leArquivo(Arquivos.getDirLetraO()));
+		treinar(letra, 0, neuronio01);
+		treinar(letra, 1, neuronio02);
 		treinar(letra, 1, neuronio03);
 		treinar(letra, 1, neuronio04);
 		treinar(letra, 0, neuronio05);
@@ -246,6 +313,32 @@ public class Perceptron {
 				retornoNeuronio05 = testaEntrada(letra, neuronio05);
 
 			}
+			
+			if (entrada1 == 7) {
+
+				// TESTA A LETRA H
+				letra = populaMatriz(leArquivo(Arquivos.getDirLetraH()));
+				retornoNeuronio01 = testaEntrada(letra, neuronio01);
+				retornoNeuronio02 = testaEntrada(letra, neuronio02);
+				retornoNeuronio03 = testaEntrada(letra, neuronio03);
+				retornoNeuronio04 = testaEntrada(letra, neuronio04);
+				retornoNeuronio05 = testaEntrada(letra, neuronio05);
+
+			}
+			
+			if (entrada1 == 8) {
+
+				// TESTA A LETRA I
+				letra = populaMatriz(leArquivo(Arquivos.getDirLetraI()));
+				retornoNeuronio01 = testaEntrada(letra, neuronio01);
+				retornoNeuronio02 = testaEntrada(letra, neuronio02);
+				retornoNeuronio03 = testaEntrada(letra, neuronio03);
+				retornoNeuronio04 = testaEntrada(letra, neuronio04);
+				retornoNeuronio05 = testaEntrada(letra, neuronio05);
+
+			}
+			
+			
 
 			// LETRA A = 0 0 0 0 0
 			if (retornoNeuronio01 == 0 && retornoNeuronio02 == 0
@@ -288,6 +381,18 @@ public class Perceptron {
 					&& retornoNeuronio03 == 1 && retornoNeuronio04 == 1
 					&& retornoNeuronio05 == 0)
 				System.out.println("\nLETRA G");
+			
+			// Letra H =	0	0	1	1	1
+			else if (retornoNeuronio01 == 0 && retornoNeuronio02 == 0
+					&& retornoNeuronio03 == 1 && retornoNeuronio04 == 1
+					&& retornoNeuronio05 == 1)
+				System.out.println("\nLETRA H");
+			
+			// Letra I = 0	1	0	0	0
+			else if (retornoNeuronio01 == 0 && retornoNeuronio02 == 1
+					&& retornoNeuronio03 == 0 && retornoNeuronio04 == 0
+					&& retornoNeuronio05 == 0)
+				System.out.println("\nLETRA I");
 
 		}
 
@@ -305,8 +410,6 @@ public class Perceptron {
 		// Treinamento
 		int epocas = 0, i;
 		double y, erro, erroGeral;
-		double eta = 0.0005d;
-		// eta é a constante (taxa) de aprendizagem
 
 		System.out.println("--- TREINAMENTO");
 		while (true) {
