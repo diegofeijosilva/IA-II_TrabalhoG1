@@ -30,137 +30,220 @@ public class Perceptron {
 	
 	public static void main(String args[]) {
 
-		int letra[][] = new int[8][8]; // ENTRADA
-
 		// Realiza o treinamento da REDE
-		treinarRede(letra);
+		treinarRede();
 
 		// Realizar os testes
 		testaRede();
 
 	}
 
-	private static void treinarRede(int letra[][]) {
+	private static void treinarRede() {
+		
+		int letra[][] = new int[8][8]; // ENTRADA
+		int acerto = 0;
+		int erros = 0;
+		
+		for(int i=0; i < 500; i++){
+			
+			// Conjunto de Treino : LETRA L
+			
+			boolean condicao = true;
+			do {
+				
+				// LETRA A = 0 0 0 0 0
+				letra = populaMatriz(leArquivo(Arquivos.getDirLetraA()));
+				treinar(letra, 0, neuronio01);
+				treinar(letra, 0, neuronio02);
+				treinar(letra, 0, neuronio03);
+				treinar(letra, 0, neuronio04);
+				treinar(letra, 0, neuronio05);
+				
+				if(testaEntrada(letra, neuronio01) == 0){ acerto++; condicao=false; } else { erros++; condicao=true;}
+				if(testaEntrada(letra, neuronio02) == 0){ acerto++; condicao=false; } else { erros++; condicao=true;}
+				if(testaEntrada(letra, neuronio03) == 0){ acerto++; condicao=false; } else { erros++; condicao=true;}
+				if(testaEntrada(letra, neuronio04) == 0){ acerto++; condicao=false; } else { erros++; condicao=true;}
+				if(testaEntrada(letra, neuronio05) == 0){ acerto++; condicao=false; } else { erros++; condicao=true;}
+				
+				
+			} while (condicao);
+			
+			do {
+				
+				// LETRA B = 0 0 0 0 1
+				letra = populaMatriz(leArquivo(Arquivos.getDirLetraB()));
+				treinar(letra, 0, neuronio01);
+				treinar(letra, 0, neuronio02);
+				treinar(letra, 0, neuronio03);
+				treinar(letra, 0, neuronio04);
+				treinar(letra, 1, neuronio05);
+				
+				if(testaEntrada(letra, neuronio01) == 0){ acerto++; condicao=false; } else { erros++; condicao=true;}
+				if(testaEntrada(letra, neuronio02) == 0){ acerto++; condicao=false; } else { erros++; condicao=true;}
+				if(testaEntrada(letra, neuronio03) == 0){ acerto++; condicao=false; } else { erros++; condicao=true;}
+				if(testaEntrada(letra, neuronio04) == 0){ acerto++; condicao=false; } else { erros++; condicao=true;}
+				if(testaEntrada(letra, neuronio05) == 1){ acerto++; condicao=false; } else { erros++; condicao=true;}
+				
+				
+			} while (condicao);
+			
+			do {
+				
+				// LETRA C = 0 0 0 1 0
+				letra = populaMatriz(leArquivo(Arquivos.getDirLetraC()));
+				treinar(letra, 0, neuronio01);
+				treinar(letra, 0, neuronio02);
+				treinar(letra, 0, neuronio03);
+				treinar(letra, 1, neuronio04);
+				treinar(letra, 0, neuronio05);
+				
+				if(testaEntrada(letra, neuronio01) == 0){ acerto++; condicao=false; } else { erros++; condicao=true;}
+				if(testaEntrada(letra, neuronio02) == 0){ acerto++; condicao=false; } else { erros++; condicao=true;}
+				if(testaEntrada(letra, neuronio03) == 0){ acerto++; condicao=false; } else { erros++; condicao=true;}
+				if(testaEntrada(letra, neuronio04) == 1){ acerto++; condicao=false; } else { erros++; condicao=true;}
+				if(testaEntrada(letra, neuronio05) == 0){ acerto++; condicao=false; } else { erros++; condicao=true;}
+				
+				
+			} while (condicao);
+			
+			do {
+				
+				// LETRA D = 0 0 0 1 1
+				letra = populaMatriz(leArquivo(Arquivos.getDirLetraD()));
+				treinar(letra, 0, neuronio01);
+				treinar(letra, 0, neuronio02);
+				treinar(letra, 0, neuronio03);
+				treinar(letra, 1, neuronio04);
+				treinar(letra, 1, neuronio05);
+				
+				if(testaEntrada(letra, neuronio01) == 0){ acerto++; condicao=false; } else { erros++; condicao=true;}
+				if(testaEntrada(letra, neuronio02) == 0){ acerto++; condicao=false; } else { erros++; condicao=true;}
+				if(testaEntrada(letra, neuronio03) == 0){ acerto++; condicao=false; } else { erros++; condicao=true;}
+				if(testaEntrada(letra, neuronio04) == 1){ acerto++; condicao=false; } else { erros++; condicao=true;}
+				if(testaEntrada(letra, neuronio05) == 1){ acerto++; condicao=false; } else { erros++; condicao=true;}
+				
+				
+			} while (condicao);
+			
+			do {
+				
+				// LETRA E = 0 0 1 0 0
+				letra = populaMatriz(leArquivo(Arquivos.getDirLetraE()));
+				treinar(letra, 0, neuronio01);
+				treinar(letra, 0, neuronio02);
+				treinar(letra, 1, neuronio03);
+				treinar(letra, 0, neuronio04);
+				treinar(letra, 0, neuronio05);
+				
+				if(testaEntrada(letra, neuronio01) == 0){ acerto++; condicao=false; } else { erros++; condicao=true;}
+				if(testaEntrada(letra, neuronio02) == 0){ acerto++; condicao=false; } else { erros++; condicao=true;}
+				if(testaEntrada(letra, neuronio03) == 1){ acerto++; condicao=false; } else { erros++; condicao=true;}
+				if(testaEntrada(letra, neuronio04) == 0){ acerto++; condicao=false; } else { erros++; condicao=true;}
+				if(testaEntrada(letra, neuronio05) == 0){ acerto++; condicao=false; } else { erros++; condicao=true;}
+				
+				
+			} while (condicao);
+			
+			
+			do {
+				
+				//Letra F =	0	0	1	0	1
+				letra = populaMatriz(leArquivo(Arquivos.getDirLetraF()));
+				treinar(letra, 0, neuronio01);
+				treinar(letra, 0, neuronio02);
+				treinar(letra, 1, neuronio03);
+				treinar(letra, 0, neuronio04);
+				treinar(letra, 1, neuronio05);
+				
+				if(testaEntrada(letra, neuronio01) == 0){ acerto++; condicao=false; } else { erros++; condicao=true;}
+				if(testaEntrada(letra, neuronio02) == 0){ acerto++; condicao=false; } else { erros++; condicao=true;}
+				if(testaEntrada(letra, neuronio03) == 1){ acerto++; condicao=false; } else { erros++; condicao=true;}
+				if(testaEntrada(letra, neuronio04) == 0){ acerto++; condicao=false; } else { erros++; condicao=true;}
+				if(testaEntrada(letra, neuronio05) == 1){ acerto++; condicao=false; } else { erros++; condicao=true;}
+				
+				
+			} while (condicao);
+			
+		}
+		
+		System.out.println("TOTAL DE ACERTOS: " + acerto);
+		System.out.println("TOTAL DE ERROS: " + erros);
 
-		// LETRA A = 0 0 0 0 0
-		letra = populaMatriz(leArquivo(Arquivos.getDirLetraA()));
-		treinar(letra, 0, neuronio01);
-		treinar(letra, 0, neuronio02);
-		treinar(letra, 0, neuronio03);
-		treinar(letra, 0, neuronio04);
-		treinar(letra, 0, neuronio05);
-
-		// LETRA B = 0 0 0 0 1
-		letra = populaMatriz(leArquivo(Arquivos.getDirLetraB()));
-		treinar(letra, 0, neuronio01);
-		treinar(letra, 0, neuronio02);
-		treinar(letra, 0, neuronio03);
-		treinar(letra, 0, neuronio04);
-		treinar(letra, 1, neuronio05);
-
-		// LETRA C = 0 0 0 1 0
-		letra = populaMatriz(leArquivo(Arquivos.getDirLetraC()));
-		treinar(letra, 0, neuronio01);
-		treinar(letra, 0, neuronio02);
-		treinar(letra, 0, neuronio03);
-		treinar(letra, 1, neuronio04);
-		treinar(letra, 0, neuronio05);
-
-		// LETRA D = 0 0 0 1 1
-		letra = populaMatriz(leArquivo(Arquivos.getDirLetraD()));
-		treinar(letra, 0, neuronio01);
-		treinar(letra, 0, neuronio02);
-		treinar(letra, 0, neuronio03);
-		treinar(letra, 1, neuronio04);
-		treinar(letra, 1, neuronio05);
-
-		// LETRA E = 0 0 1 0 0
-		letra = populaMatriz(leArquivo(Arquivos.getDirLetraE()));
-		treinar(letra, 0, neuronio01);
-		treinar(letra, 0, neuronio02);
-		treinar(letra, 1, neuronio03);
-		treinar(letra, 0, neuronio04);
-		treinar(letra, 0, neuronio05);
 		
-		//Letra F =	0	0	1	0	1
-		letra = populaMatriz(leArquivo(Arquivos.getDirLetraF()));
-		treinar(letra, 0, neuronio01);
-		treinar(letra, 0, neuronio02);
-		treinar(letra, 1, neuronio03);
-		treinar(letra, 0, neuronio04);
-		treinar(letra, 1, neuronio05);
 		
-		//Letra G =	0	0	1	1	0
-		letra = populaMatriz(leArquivo(Arquivos.getDirLetraG()));
-		treinar(letra, 0, neuronio01);
-		treinar(letra, 0, neuronio02);
-		treinar(letra, 1, neuronio03);
-		treinar(letra, 1, neuronio04);
-		treinar(letra, 0, neuronio05);
 		
-		// Letra H =	0	0	1	1	1
-		letra = populaMatriz(leArquivo(Arquivos.getDirLetraH()));
-		treinar(letra, 0, neuronio01);
-		treinar(letra, 0, neuronio02);
-		treinar(letra, 1, neuronio03);
-		treinar(letra, 1, neuronio04);
-		treinar(letra, 1, neuronio05);
-		
-		// Letra I = 0	1	0	0	0
-		letra = populaMatriz(leArquivo(Arquivos.getDirLetraI()));
-		treinar(letra, 0, neuronio01);
-		treinar(letra, 1, neuronio02);
-		treinar(letra, 0, neuronio03);
-		treinar(letra, 0, neuronio04);
-		treinar(letra, 0, neuronio05);
-		
-		// Letra J =	0	1	0	0	1
-		letra = populaMatriz(leArquivo(Arquivos.getDirLetraJ()));
-		treinar(letra, 0, neuronio01);
-		treinar(letra, 1, neuronio02);
-		treinar(letra, 0, neuronio03);
-		treinar(letra, 0, neuronio04);
-		treinar(letra, 1, neuronio05);
-		
-		// Letra K = 0	1	0	1	0
-		letra = populaMatriz(leArquivo(Arquivos.getDirLetraK()));
-		treinar(letra, 0, neuronio01);
-		treinar(letra, 1, neuronio02);
-		treinar(letra, 0, neuronio03);
-		treinar(letra, 1, neuronio04);
-		treinar(letra, 0, neuronio05);
-		
-		// Letra L = 0	1	0	1	1
-		letra = populaMatriz(leArquivo(Arquivos.getDirLetraL()));
-		treinar(letra, 0, neuronio01);
-		treinar(letra, 1, neuronio02);
-		treinar(letra, 0, neuronio03);
-		treinar(letra, 1, neuronio04);
-		treinar(letra, 1, neuronio05);
-		
-		// Letra M = 0	1	1	0	0
-		letra = populaMatriz(leArquivo(Arquivos.getDirLetraM()));
-		treinar(letra, 0, neuronio01);
-		treinar(letra, 1, neuronio02);
-		treinar(letra, 1, neuronio03);
-		treinar(letra, 0, neuronio04);
-		treinar(letra, 0, neuronio05);
-		
-		// Letra N = 0	1	1	0	1
-		letra = populaMatriz(leArquivo(Arquivos.getDirLetraN()));
-		treinar(letra, 0, neuronio01);
-		treinar(letra, 1, neuronio02);
-		treinar(letra, 1, neuronio03);
-		treinar(letra, 0, neuronio04);
-		treinar(letra, 1, neuronio05);
-		
-		// Letra O = 0	1	1	1	0
-		letra = populaMatriz(leArquivo(Arquivos.getDirLetraO()));
-		treinar(letra, 0, neuronio01);
-		treinar(letra, 1, neuronio02);
-		treinar(letra, 1, neuronio03);
-		treinar(letra, 1, neuronio04);
-		treinar(letra, 0, neuronio05);
+//		
+//		//Letra G =	0	0	1	1	0
+//		letra = populaMatriz(leArquivo(Arquivos.getDirLetraG()));
+//		treinar(letra, 0, neuronio01);
+//		treinar(letra, 0, neuronio02);
+//		treinar(letra, 1, neuronio03);
+//		treinar(letra, 1, neuronio04);
+//		treinar(letra, 0, neuronio05);
+//		
+//		// Letra H =	0	0	1	1	1
+//		letra = populaMatriz(leArquivo(Arquivos.getDirLetraH()));
+//		treinar(letra, 0, neuronio01);
+//		treinar(letra, 0, neuronio02);
+//		treinar(letra, 1, neuronio03);
+//		treinar(letra, 1, neuronio04);
+//		treinar(letra, 1, neuronio05);
+//		
+//		// Letra I = 0	1	0	0	0
+//		letra = populaMatriz(leArquivo(Arquivos.getDirLetraI()));
+//		treinar(letra, 0, neuronio01);
+//		treinar(letra, 1, neuronio02);
+//		treinar(letra, 0, neuronio03);
+//		treinar(letra, 0, neuronio04);
+//		treinar(letra, 0, neuronio05);
+//		
+//		// Letra J =	0	1	0	0	1
+//		letra = populaMatriz(leArquivo(Arquivos.getDirLetraJ()));
+//		treinar(letra, 0, neuronio01);
+//		treinar(letra, 1, neuronio02);
+//		treinar(letra, 0, neuronio03);
+//		treinar(letra, 0, neuronio04);
+//		treinar(letra, 1, neuronio05);
+//		
+//		// Letra K = 0	1	0	1	0
+//		letra = populaMatriz(leArquivo(Arquivos.getDirLetraK()));
+//		treinar(letra, 0, neuronio01);
+//		treinar(letra, 1, neuronio02);
+//		treinar(letra, 0, neuronio03);
+//		treinar(letra, 1, neuronio04);
+//		treinar(letra, 0, neuronio05);
+//		
+//		// Letra L = 0	1	0	1	1
+//		letra = populaMatriz(leArquivo(Arquivos.getDirLetraL()));
+//		treinar(letra, 0, neuronio01);
+//		treinar(letra, 1, neuronio02);
+//		treinar(letra, 0, neuronio03);
+//		treinar(letra, 1, neuronio04);
+//		treinar(letra, 1, neuronio05);
+//		
+//		// Letra M = 0	1	1	0	0
+//		letra = populaMatriz(leArquivo(Arquivos.getDirLetraM()));
+//		treinar(letra, 0, neuronio01);
+//		treinar(letra, 1, neuronio02);
+//		treinar(letra, 1, neuronio03);
+//		treinar(letra, 0, neuronio04);
+//		treinar(letra, 0, neuronio05);
+//		
+//		// Letra N = 0	1	1	0	1
+//		letra = populaMatriz(leArquivo(Arquivos.getDirLetraN()));
+//		treinar(letra, 0, neuronio01);
+//		treinar(letra, 1, neuronio02);
+//		treinar(letra, 1, neuronio03);
+//		treinar(letra, 0, neuronio04);
+//		treinar(letra, 1, neuronio05);
+//		
+//		// Letra O = 0	1	1	1	0
+//		letra = populaMatriz(leArquivo(Arquivos.getDirLetraO()));
+//		treinar(letra, 0, neuronio01);
+//		treinar(letra, 1, neuronio02);
+//		treinar(letra, 1, neuronio03);
+//		treinar(letra, 1, neuronio04);
+//		treinar(letra, 0, neuronio05);
 
 	}
 
@@ -301,42 +384,42 @@ public class Perceptron {
 				retornoNeuronio05 = testaEntrada(letra, neuronio05);
 
 			}
-			
-			if (entrada1 == 7) {
-
-				// TESTA A LETRA G
-				letra = populaMatriz(leArquivo(Arquivos.getDirLetraG()));
-				retornoNeuronio01 = testaEntrada(letra, neuronio01);
-				retornoNeuronio02 = testaEntrada(letra, neuronio02);
-				retornoNeuronio03 = testaEntrada(letra, neuronio03);
-				retornoNeuronio04 = testaEntrada(letra, neuronio04);
-				retornoNeuronio05 = testaEntrada(letra, neuronio05);
-
-			}
-			
-			if (entrada1 == 7) {
-
-				// TESTA A LETRA H
-				letra = populaMatriz(leArquivo(Arquivos.getDirLetraH()));
-				retornoNeuronio01 = testaEntrada(letra, neuronio01);
-				retornoNeuronio02 = testaEntrada(letra, neuronio02);
-				retornoNeuronio03 = testaEntrada(letra, neuronio03);
-				retornoNeuronio04 = testaEntrada(letra, neuronio04);
-				retornoNeuronio05 = testaEntrada(letra, neuronio05);
-
-			}
-			
-			if (entrada1 == 8) {
-
-				// TESTA A LETRA I
-				letra = populaMatriz(leArquivo(Arquivos.getDirLetraI()));
-				retornoNeuronio01 = testaEntrada(letra, neuronio01);
-				retornoNeuronio02 = testaEntrada(letra, neuronio02);
-				retornoNeuronio03 = testaEntrada(letra, neuronio03);
-				retornoNeuronio04 = testaEntrada(letra, neuronio04);
-				retornoNeuronio05 = testaEntrada(letra, neuronio05);
-
-			}
+//			
+//			if (entrada1 == 7) {
+//
+//				// TESTA A LETRA G
+//				letra = populaMatriz(leArquivo(Arquivos.getDirLetraG()));
+//				retornoNeuronio01 = testaEntrada(letra, neuronio01);
+//				retornoNeuronio02 = testaEntrada(letra, neuronio02);
+//				retornoNeuronio03 = testaEntrada(letra, neuronio03);
+//				retornoNeuronio04 = testaEntrada(letra, neuronio04);
+//				retornoNeuronio05 = testaEntrada(letra, neuronio05);
+//
+//			}
+//			
+//			if (entrada1 == 7) {
+//
+//				// TESTA A LETRA H
+//				letra = populaMatriz(leArquivo(Arquivos.getDirLetraH()));
+//				retornoNeuronio01 = testaEntrada(letra, neuronio01);
+//				retornoNeuronio02 = testaEntrada(letra, neuronio02);
+//				retornoNeuronio03 = testaEntrada(letra, neuronio03);
+//				retornoNeuronio04 = testaEntrada(letra, neuronio04);
+//				retornoNeuronio05 = testaEntrada(letra, neuronio05);
+//
+//			}
+//			
+//			if (entrada1 == 8) {
+//
+//				// TESTA A LETRA I
+//				letra = populaMatriz(leArquivo(Arquivos.getDirLetraI()));
+//				retornoNeuronio01 = testaEntrada(letra, neuronio01);
+//				retornoNeuronio02 = testaEntrada(letra, neuronio02);
+//				retornoNeuronio03 = testaEntrada(letra, neuronio03);
+//				retornoNeuronio04 = testaEntrada(letra, neuronio04);
+//				retornoNeuronio05 = testaEntrada(letra, neuronio05);
+//
+//			}
 			
 			
 
