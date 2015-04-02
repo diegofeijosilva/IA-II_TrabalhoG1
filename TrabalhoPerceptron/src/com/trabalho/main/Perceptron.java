@@ -305,7 +305,7 @@ public class Perceptron {
 		// Treinamento
 		int epocas = 0, i;
 		double y, erro, erroGeral;
-		double eta = 0.0001d;
+		double eta = 0.0005d;
 		// eta é a constante (taxa) de aprendizagem
 
 		System.out.println("--- TREINAMENTO");
