@@ -5,6 +5,7 @@ import static java.lang.Math.abs;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.math.BigDecimal;
 import java.util.Scanner;
 
 import com.trabalho.model.Arquivos;
@@ -27,7 +28,7 @@ public class Perceptron {
 			     letraY;
 
 	// eta é a constante (taxa) de aprendizagem
-	static double eta = 0.05d;
+	static double eta = 0.05;
 
 	// CONSTANTE DE TREINAMENTO
 	static int CONSTANTE_DE_TREINAMENTO = 100000;
@@ -52,7 +53,6 @@ public class Perceptron {
 
 	private static void treinarRede() {
 
-		int letra[][] = new int[8][8]; // ENTRADA
 		int epocas = -1;
 
 		Boolean retA = true, retB = true, retC = true, retD = true, retE = true, retF = true, retG = true, retH = true, retI = true, retJ = true, retK = true, retL = true, retM = true, retN = true, retO = true, retP = true, retQ = true, retR = true, retS = true, retT = true, retU = true, retV = true, retW = true, retX = true, retY = true;
