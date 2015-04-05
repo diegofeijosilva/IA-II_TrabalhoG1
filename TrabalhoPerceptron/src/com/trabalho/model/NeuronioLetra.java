@@ -4,7 +4,7 @@ public class NeuronioLetra {
 	
 	private String nome;
 	
-	private double w0 = 1d; // pesos
+	private double w0; // pesos
 
 	// Representa as 64 entradas - Matriz de 8 x 8
 	private Double w[] = new Double[64];
@@ -19,7 +19,7 @@ public class NeuronioLetra {
 		
 	}
 
-	public double calculaV(double x0, int x[][]) {
+	public double calculaV(double x0, Integer x[][]) {
 		
 		Double soma = (double) 0;
 		int posW = -1;
@@ -40,7 +40,7 @@ public class NeuronioLetra {
 
 	}
 
-	public int calculaY(double x0, int x[][]) { // aplica a função
+	public Integer calculaY(double x0, Integer x[][]) { // aplica a função
 
 		double v = calculaV(x0, x);
 
