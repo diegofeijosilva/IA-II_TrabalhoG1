@@ -1,13 +1,15 @@
 package com.trabalho.main;
 
-//Exemplo - Rede Perceptron com apenas 1 neuronio
 import static java.lang.Math.abs;
 
+import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
+import com.trabalho.enuns.LetraEnum;
 import com.trabalho.model.Arquivos;
 import com.trabalho.model.Letra;
 import com.trabalho.model.NeuronioLetra;
@@ -20,24 +22,29 @@ public class Perceptron {
 	static NeuronioLetra neuronio03 = new NeuronioLetra("Neuronio03");
 	static NeuronioLetra neuronio04 = new NeuronioLetra("Neuronio04");
 	static NeuronioLetra neuronio05 = new NeuronioLetra("Neuronio05");
-	
+
 	// LETRAS
-	static Letra letraA, letraB, letraC, letraD, letraE, letraF, letraG, letraH,
-			     letraI, letraJ, letraK, letraL, letraM, letraN, letraO, letraP,
-			     letraQ, letraR, letraS, letraT, letraU, letraV, letraW, letraX,
-			     letraY;
+	static Letra letraA, letraB, letraC, letraD, letraE, letraF, letraG,
+			letraH, letraI, letraJ, letraK, letraL, letraM, letraN, letraO,
+			letraP, letraQ, letraR, letraS, letraT, letraU, letraV, letraW,
+			letraX, letraY;
 
 	// eta é a constante (taxa) de aprendizagem
 	static double eta = 0.05;
 
 	// CONSTANTE DE TREINAMENTO
-	static int CONSTANTE_DE_TREINAMENTO = 100000;
+	static int CONSTANTE_DE_TREINAMENTO = 1000;
+
+	static String DIRETORIO_EXEMPLOS = "Resource/Exemplos/";
 
 	static int acertos = 0;
 	static int erros = 0;
 
 	public static void main(String args[]) {
-		
+
+		String entradaFrase;
+		Scanner dados = new Scanner(System.in);
+
 		// FAZ A LEITURA DOS ARQUIVOS E CRIA OS OBJETOS COM AS LETRAS
 		inicializaLetras();
 
@@ -47,9 +54,92 @@ public class Perceptron {
 		// Realizar os testes
 		testaRede();
 
+		while (true) {
+			// digita novas entradas
+			System.out
+					.print("\nDIGITE O NOME DO ARQUIVO (SEM EXTENSÃO) OU -1 PARA SAIR: ");
+			entradaFrase = dados.next();
+			if (entradaFrase.equals("-1"))
+				break;
+
+			// propagação
+			System.out.println("Palavra: " + identificaPalavra(entradaFrase));
+
+		}
+
 	}
 
-	
+	public static String identificaPalavra(String arquivoPalavra) {
+
+		String palavra = "";
+		List<Integer[][]> listaLetras = lePalavra(arquivoPalavra);
+
+		for (Integer[][] mtz : listaLetras) {
+
+			Integer saida1 = testaEntrada(mtz, neuronio01);
+			Integer saida2 = testaEntrada(mtz, neuronio02);
+			Integer saida3 = testaEntrada(mtz, neuronio03);
+			Integer saida4 = testaEntrada(mtz, neuronio04);
+			Integer saida5 = testaEntrada(mtz, neuronio05);
+
+			String saida = saida1.toString() + saida2.toString()
+					+ saida3.toString() + saida4.toString() + saida5.toString();
+
+			palavra += LetraEnum.letra(saida);
+
+		}
+
+		return palavra;
+
+	}
+
+	// REALIZA A LEITURA DO ARQUIVO QUE CONTÉM A PALAVRA E RETORNA UMA LISTA
+	private static List<Integer[][]> lePalavra(String palavra) {
+
+		List<Integer[][]> listaMtzLetras = new ArrayList<Integer[][]>();
+
+		int tamLinha = 0;
+		int qtdLetras = 0;
+		String[] linha = new String[8];
+		int ini = 0;
+
+		try {
+			BufferedReader file = new BufferedReader(new FileReader(
+					DIRETORIO_EXEMPLOS + palavra + ".txt"));
+			for (int i = 0; i < 8; i++) {
+				linha[i] = file.readLine();
+				if (i == 0) {
+					tamLinha = linha[i].length();
+				}
+			}
+			file.close();
+			qtdLetras = tamLinha / 9; // 9 em função da coluna de espaço
+
+			for (int c = 0; c < qtdLetras; c++) {
+
+				Integer[][] mtz = new Integer[8][8];
+
+				for (int i = 0; i < 8; i++) {
+					String str = linha[i].substring(ini, ini + 8);
+					for (int j = 0; j < 8; j++) {
+						if (new Character(str.charAt(j)).toString().equals("X")) {
+							mtz[i][j] = 1;
+						} else {
+							mtz[i][j] = 0;
+						}
+					}
+				}
+				listaMtzLetras.add(mtz);
+				ini = ini + 9;
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return listaMtzLetras;
+
+	}
 
 	private static void treinarRede() {
 
@@ -63,14 +153,14 @@ public class Perceptron {
 
 			System.out.println("Epoca: " + epocas);
 
-			// LETRA A = 0 0 0 0 0
-			treinaLetra(letraA);
-
 			// LETRA B = 0 0 0 0 1
 			treinaLetra(letraB);
 
 			// LETRA C = 0 0 0 1 0
 			treinaLetra(letraC);
+
+			// LETRA A = 0 0 0 0 0
+			treinaLetra(letraA);
 
 			// LETRA D = 0 0 0 1 1
 			treinaLetra(letraD);
@@ -102,14 +192,13 @@ public class Perceptron {
 			// Letra M = 0 1 1 0 0
 			treinaLetra(letraM);
 
-			// Letra N = 0 1 1 0 1
-			treinaLetra(letraN);
-
-			// Letra O = 0 1 1 1 0
-			treinaLetra(letraO);
+			
 
 			// Letra P = 0 1 1 1 1
 			treinaLetra(letraP);
+
+			// Letra N = 0 1 1 0 1
+			treinaLetra(letraN);
 
 			// Letra Q = 1 0 0 0 0
 			treinaLetra(letraQ);
@@ -131,12 +220,17 @@ public class Perceptron {
 
 			// Letra W = 1 0 1 1 0
 			treinaLetra(letraW);
+			
+			// Letra O = 0 1 1 1 0
+						treinaLetra(letraO);
 
 			// Letra X = 1 0 1 1 1
 			treinaLetra(letraX);
 
 			// Letra Y = 1 1 0 0 0
 			treinaLetra(letraY);
+			
+			
 
 			// TESTA TODAS AS LETRAS APÓS A ÉPOCA DE TREINO
 			retA = verificaLetra(letraA);
@@ -147,7 +241,7 @@ public class Perceptron {
 			retF = verificaLetra(letraF);
 			retG = verificaLetra(letraG);
 			retH = verificaLetra(letraH);
-			
+
 			retI = verificaLetra(letraI);
 			retJ = verificaLetra(letraJ);
 			retK = verificaLetra(letraK);
@@ -156,7 +250,7 @@ public class Perceptron {
 			retN = verificaLetra(letraN);
 			retO = verificaLetra(letraO);
 			retP = verificaLetra(letraP);
-			
+
 			retQ = verificaLetra(letraQ);
 			retR = verificaLetra(letraR);
 			retS = verificaLetra(letraS);
@@ -166,15 +260,16 @@ public class Perceptron {
 			retW = verificaLetra(letraW);
 			retX = verificaLetra(letraX);
 			retY = verificaLetra(letraY);
-			
-			if(epocas == CONSTANTE_DE_TREINAMENTO) break;
-			
+
+			if (epocas == CONSTANTE_DE_TREINAMENTO)
+				break;
+
 			// SAI DO TREINAMENTO SOMENTE QUANDO TODAS AS LETRAS FOREM
 			// RECONHECIDAS
-		} while (!retA || !retB || !retC || !retD || !retE || !retF || !retG || !retH
-				|| !retI || !retJ || !retK || !retL || !retM || !retN || !retO || !retP
-				|| !retQ || !retR || !retS || !retT || !retU || !retV || !retW || !retX
-				|| !retY);
+		} while (!retA || !retB || !retC || !retD || !retE || !retF || !retG
+				|| !retH || !retI || !retJ || !retK || !retL || !retM || !retN
+				|| !retO || !retP || !retQ || !retR || !retS || !retT || !retU
+				|| !retV || !retW || !retX || !retY);
 
 		System.out.println("EPOCAS NECESSÁRIAS: " + epocas);
 		System.out.println("TOTAL DE ACERTOS: " + acertos);
@@ -194,7 +289,7 @@ public class Perceptron {
 	private static void treinaLetra(Letra letra) {
 
 		boolean condicao = true;
-		
+
 		String bits[] = letra.getBits().split(";");
 
 		do {
@@ -205,11 +300,16 @@ public class Perceptron {
 			treinar(letra.getLetra(), Integer.parseInt(bits[3]), neuronio04);
 			treinar(letra.getLetra(), Integer.parseInt(bits[4]), neuronio05);
 
-			if (testaEntrada(letra.getLetra(), neuronio01).equals(Integer.parseInt(bits[0]))
-			 && testaEntrada(letra.getLetra(), neuronio02).equals(Integer.parseInt(bits[1]))
-			 && testaEntrada(letra.getLetra(), neuronio03).equals(Integer.parseInt(bits[2]))
-			 && testaEntrada(letra.getLetra(), neuronio04).equals(Integer.parseInt(bits[3]))
-			 && testaEntrada(letra.getLetra(), neuronio05).equals(Integer.parseInt(bits[4]))) {
+			if (testaEntrada(letra.getLetra(), neuronio01).equals(
+					Integer.parseInt(bits[0]))
+					&& testaEntrada(letra.getLetra(), neuronio02).equals(
+							Integer.parseInt(bits[1]))
+					&& testaEntrada(letra.getLetra(), neuronio03).equals(
+							Integer.parseInt(bits[2]))
+					&& testaEntrada(letra.getLetra(), neuronio04).equals(
+							Integer.parseInt(bits[3]))
+					&& testaEntrada(letra.getLetra(), neuronio05).equals(
+							Integer.parseInt(bits[4]))) {
 				acertos++;
 				condicao = false;
 			} else {
@@ -225,7 +325,7 @@ public class Perceptron {
 	private static Boolean verificaLetra(Letra letra) {
 
 		Integer retornoNeuronio01, retornoNeuronio02, retornoNeuronio03, retornoNeuronio04, retornoNeuronio05;
-		
+
 		String bits[] = letra.getBits().split(";");
 
 		retornoNeuronio01 = testaEntrada(letra.getLetra(), neuronio01);
@@ -234,115 +334,14 @@ public class Perceptron {
 		retornoNeuronio04 = testaEntrada(letra.getLetra(), neuronio04);
 		retornoNeuronio05 = testaEntrada(letra.getLetra(), neuronio05);
 
-		if (retornoNeuronio01.equals(Integer.parseInt(bits[0])) 
-		 && retornoNeuronio02.equals(Integer.parseInt(bits[1]))
-		 && retornoNeuronio03.equals(Integer.parseInt(bits[2]))
-		 && retornoNeuronio04.equals(Integer.parseInt(bits[3]))
-		 && retornoNeuronio05.equals(Integer.parseInt(bits[4])))
+		if (retornoNeuronio01.equals(Integer.parseInt(bits[0]))
+				&& retornoNeuronio02.equals(Integer.parseInt(bits[1]))
+				&& retornoNeuronio03.equals(Integer.parseInt(bits[2]))
+				&& retornoNeuronio04.equals(Integer.parseInt(bits[3]))
+				&& retornoNeuronio05.equals(Integer.parseInt(bits[4])))
 			return true;
 
 		return false;
-	}
-	
-	private static void inicializaLetras() {
-		
-		// LETRA A = 0 0 0 0 0
-		letraA = new Letra(populaMatriz(leArquivo(Arquivos.getDirLetraA())), "0;0;0;0;0");
-
-		// LETRA B = 0 0 0 0 1
-		letraB = new Letra(populaMatriz(leArquivo(Arquivos.getDirLetraB())), "0;0;0;0;1");
-		
-		// LETRA C = 0 0 0 1 0
-		letraC = new Letra(populaMatriz(leArquivo(Arquivos.getDirLetraC())), "0;0;0;1;0");
-		
-		// LETRA D = 0 0 0 1 1	
-		letraD = new Letra(populaMatriz(leArquivo(Arquivos.getDirLetraD())), "0;0;0;1;1");
-		
-		// LETRA E = 0 0 1 0 0
-		letraE = new Letra(populaMatriz(leArquivo(Arquivos.getDirLetraE())), "0;0;1;0;0");
-		
-		// Letra F = 0 0 1 0 1
-		letraF = new Letra(populaMatriz(leArquivo(Arquivos.getDirLetraF())), "0;0;1;0;1");
-		
-		// Letra G = 0 0 1 1 0
-		letraG = new Letra(populaMatriz(leArquivo(Arquivos.getDirLetraG())), "0;0;1;1;0");
-		
-		// Letra H = 0 0 1 1 1	
-		letraH = new Letra(populaMatriz(leArquivo(Arquivos.getDirLetraH())), "0;0;1;1;1");
-		
-		// Letra I = 0 1 0 0 0
-		letraI = new Letra(populaMatriz(leArquivo(Arquivos.getDirLetraI())), "0;1;0;0;0");
-		
-		// Letra J = 0 1 0 0 1
-		letraJ = new Letra(populaMatriz(leArquivo(Arquivos.getDirLetraJ())), "0;1;0;0;1");
-		
-		// Letra K = 0 1 0 1 0
-		letraK = new Letra(populaMatriz(leArquivo(Arquivos.getDirLetraK())), "0;1;0;1;0");
-		
-		// Letra L = 0 1 0 1 1
-		letraL = new Letra(populaMatriz(leArquivo(Arquivos.getDirLetraL())), "0;1;0;1;1");
-		
-		// Letra M = 0 1 1 0 0
-		letraM = new Letra(populaMatriz(leArquivo(Arquivos.getDirLetraM())), "0;1;1;0;0");
-		
-		// Letra N = 0 1 1 0 1
-		letraN = new Letra(populaMatriz(leArquivo(Arquivos.getDirLetraN())), "0;1;1;0;1");
-		
-		// Letra O = 0 1 1 1 0
-		letraO = new Letra(populaMatriz(leArquivo(Arquivos.getDirLetraO())), "0;1;1;1;0");
-		
-		// Letra P = 0 1 1 1 1
-		letraP = new Letra(populaMatriz(leArquivo(Arquivos.getDirLetraP())), "0;1;1;1;1");
-		
-		// Letra Q = 1 0 0 0 0
-		letraQ = new Letra(populaMatriz(leArquivo(Arquivos.getDirLetraQ())), "1;0;0;0;0");
-		
-		// Letra R = 1 0 0 0 1
-		letraR = new Letra(populaMatriz(leArquivo(Arquivos.getDirLetraR())), "1;0;0;0;1");
-		
-		// Letra S = 1 0 0 1 0
-		letraS = new Letra(populaMatriz(leArquivo(Arquivos.getDirLetraS())), "1;0;0;1;0");
-		
-		// Letra T = 1 0 0 1 1
-		letraT = new Letra(populaMatriz(leArquivo(Arquivos.getDirLetraT())), "1;0;0;1;1");
-		
-		// Letra U = 1 0 1 0 0
-		letraU = new Letra(populaMatriz(leArquivo(Arquivos.getDirLetraU())), "1;0;1;0;0");
-		
-		// Letra V = 1 0 1 0 1
-		letraV = new Letra(populaMatriz(leArquivo(Arquivos.getDirLetraV())), "1;0;1;0;1");
-		
-		// Letra W = 1 0 1 1 0
-		letraW = new Letra(populaMatriz(leArquivo(Arquivos.getDirLetraW())), "1;0;1;1;0");
-		
-		// Letra X = 1 0 1 1 1
-		letraX = new Letra(populaMatriz(leArquivo(Arquivos.getDirLetraX())), "1;0;1;1;1");
-		
-		// Letra Y = 1 1 0 0 0
-		letraY = new Letra(populaMatriz(leArquivo(Arquivos.getDirLetraY())), "1;1;0;0;0");
-					
-	}
-
-	private static String leArquivo(String caminhoDoArquivo) {
-		// Abre os arquivos
-
-		Scanner scanner = null;
-		try {
-			scanner = new Scanner(new FileReader(caminhoDoArquivo))
-					.useDelimiter("\\||\\n");
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		String strSaida = new String();
-		while (scanner.hasNext()) {
-
-			strSaida = strSaida + scanner.next();
-
-		}
-
-		return strSaida;
-
 	}
 
 	private static Integer[][] populaMatriz(String letra) {
@@ -373,15 +372,6 @@ public class Perceptron {
 	}
 
 	private static void testaRede() {
-
-		// Generalizacao - Teste da rede
-		int entrada1;
-		Scanner dados = new Scanner(System.in);
-		System.out.println("\n--- GENERALIZACAO");
-
-		int letra[][] = new int[8][8]; // ENTRADA
-
-		int retornoNeuronio01 = 0, retornoNeuronio02 = 0, retornoNeuronio03 = 0, retornoNeuronio04 = 0, retornoNeuronio05 = 0;
 
 		// LETRA A = 0 0 0 0 0
 		if (verificaLetra(letraA))
@@ -541,6 +531,134 @@ public class Perceptron {
 			if (erroGeral == 0)
 				break;
 		}
+
+	}
+
+	// INICIALIZA AS VARIÁVEIS QUE CORRESPONDE AS LETRAS
+	private static void inicializaLetras() {
+
+		// LETRA A = 0 0 0 0 0
+		letraA = new Letra(populaMatriz(leArquivo(Arquivos.getDirLetraA())),
+				"0;0;0;0;0");
+
+		// LETRA B = 0 0 0 0 1
+		letraB = new Letra(populaMatriz(leArquivo(Arquivos.getDirLetraB())),
+				"0;0;0;0;1");
+
+		// LETRA C = 0 0 0 1 0
+		letraC = new Letra(populaMatriz(leArquivo(Arquivos.getDirLetraC())),
+				"0;0;0;1;0");
+
+		// LETRA D = 0 0 0 1 1
+		letraD = new Letra(populaMatriz(leArquivo(Arquivos.getDirLetraD())),
+				"0;0;0;1;1");
+
+		// LETRA E = 0 0 1 0 0
+		letraE = new Letra(populaMatriz(leArquivo(Arquivos.getDirLetraE())),
+				"0;0;1;0;0");
+
+		// Letra F = 0 0 1 0 1
+		letraF = new Letra(populaMatriz(leArquivo(Arquivos.getDirLetraF())),
+				"0;0;1;0;1");
+
+		// Letra G = 0 0 1 1 0
+		letraG = new Letra(populaMatriz(leArquivo(Arquivos.getDirLetraG())),
+				"0;0;1;1;0");
+
+		// Letra H = 0 0 1 1 1
+		letraH = new Letra(populaMatriz(leArquivo(Arquivos.getDirLetraH())),
+				"0;0;1;1;1");
+
+		// Letra I = 0 1 0 0 0
+		letraI = new Letra(populaMatriz(leArquivo(Arquivos.getDirLetraI())),
+				"0;1;0;0;0");
+
+		// Letra J = 0 1 0 0 1
+		letraJ = new Letra(populaMatriz(leArquivo(Arquivos.getDirLetraJ())),
+				"0;1;0;0;1");
+
+		// Letra K = 0 1 0 1 0
+		letraK = new Letra(populaMatriz(leArquivo(Arquivos.getDirLetraK())),
+				"0;1;0;1;0");
+
+		// Letra L = 0 1 0 1 1
+		letraL = new Letra(populaMatriz(leArquivo(Arquivos.getDirLetraL())),
+				"0;1;0;1;1");
+
+		// Letra M = 0 1 1 0 0
+		letraM = new Letra(populaMatriz(leArquivo(Arquivos.getDirLetraM())),
+				"0;1;1;0;0");
+
+		// Letra N = 0 1 1 0 1
+		letraN = new Letra(populaMatriz(leArquivo(Arquivos.getDirLetraN())),
+				"0;1;1;0;1");
+
+		// Letra O = 0 1 1 1 0
+		letraO = new Letra(populaMatriz(leArquivo(Arquivos.getDirLetraO())),
+				"0;1;1;1;0");
+
+		// Letra P = 0 1 1 1 1
+		letraP = new Letra(populaMatriz(leArquivo(Arquivos.getDirLetraP())),
+				"0;1;1;1;1");
+
+		// Letra Q = 1 0 0 0 0
+		letraQ = new Letra(populaMatriz(leArquivo(Arquivos.getDirLetraQ())),
+				"1;0;0;0;0");
+
+		// Letra R = 1 0 0 0 1
+		letraR = new Letra(populaMatriz(leArquivo(Arquivos.getDirLetraR())),
+				"1;0;0;0;1");
+
+		// Letra S = 1 0 0 1 0
+		letraS = new Letra(populaMatriz(leArquivo(Arquivos.getDirLetraS())),
+				"1;0;0;1;0");
+
+		// Letra T = 1 0 0 1 1
+		letraT = new Letra(populaMatriz(leArquivo(Arquivos.getDirLetraT())),
+				"1;0;0;1;1");
+
+		// Letra U = 1 0 1 0 0
+		letraU = new Letra(populaMatriz(leArquivo(Arquivos.getDirLetraU())),
+				"1;0;1;0;0");
+
+		// Letra V = 1 0 1 0 1
+		letraV = new Letra(populaMatriz(leArquivo(Arquivos.getDirLetraV())),
+				"1;0;1;0;1");
+
+		// Letra W = 1 0 1 1 0
+		letraW = new Letra(populaMatriz(leArquivo(Arquivos.getDirLetraW())),
+				"1;0;1;1;0");
+
+		// Letra X = 1 0 1 1 1
+		letraX = new Letra(populaMatriz(leArquivo(Arquivos.getDirLetraX())),
+				"1;0;1;1;1");
+
+		// Letra Y = 1 1 0 0 0
+		letraY = new Letra(populaMatriz(leArquivo(Arquivos.getDirLetraY())),
+				"1;1;0;0;0");
+
+	}
+
+	// FAZ A LEITURA DO ARQUIVO DE LETRA
+	private static String leArquivo(String caminhoDoArquivo) {
+		// Abre os arquivos
+
+		Scanner scanner = null;
+		try {
+			scanner = new Scanner(new FileReader(caminhoDoArquivo))
+					.useDelimiter("\\||\\n");
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		String strSaida = new String();
+		while (scanner.hasNext()) {
+
+			strSaida = strSaida + scanner.next();
+
+		}
+
+		return strSaida;
 
 	}
 
