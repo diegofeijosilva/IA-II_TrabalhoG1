@@ -222,7 +222,7 @@ public class Perceptron {
 			treinaLetra(letraW);
 			
 			// Letra O = 0 1 1 1 0
-						treinaLetra(letraO);
+			treinaLetra(letraO);
 
 			// Letra X = 1 0 1 1 1
 			treinaLetra(letraX);
