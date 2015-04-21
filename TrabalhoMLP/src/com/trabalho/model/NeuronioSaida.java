@@ -11,7 +11,7 @@ public class NeuronioSaida {
 	private double w0; // Peso 0
 
 	// Pesos dos Neurônios na camda de saída
-	private Double w[] = new Double[1];
+	private Double w[] = new Double[2];
 	
 	public NeuronioSaida(String nome) {
 		

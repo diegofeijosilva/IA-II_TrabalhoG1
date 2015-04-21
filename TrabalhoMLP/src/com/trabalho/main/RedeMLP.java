@@ -14,7 +14,8 @@ import com.trabalho.model.NeuronioSaida;
 
 public class RedeMLP {
 
-	private static CamadaEntrada camadaEntrada = new CamadaEntrada("Entrada", 1);
+	// NOME DA CAMADA E QUANTIDADE DE NEURONIOS
+	private static CamadaEntrada camadaEntrada = new CamadaEntrada("Entrada", 2);
 	//private static CamadaOculta camadaOculta = new CamadaOculta("Oculta", 1);
 	private static CamadaSaida camadaSaida = new CamadaSaida("Saida", 5);
 
@@ -30,7 +31,7 @@ public class RedeMLP {
 	// CONSTANTE DE TREINAMENTO
 	private static int CONSTANTE_DE_TREINAMENTO = 1000;
 	
-	private static double ERRO_INSTANTANEO = 0.1;
+	private static double ERRO_INSTANTANEO = 0.5;
 
 	private static String DIRETORIO_EXEMPLOS = "Resource/Exemplos/";
 
@@ -55,7 +56,7 @@ public class RedeMLP {
 		
 		// ENTRA COM A LETRA NA REDE
 		List<Integer> retornoCamadaEntrada = new ArrayList<Integer>();
-		List<Integer> retornoCamadaOculta = new ArrayList<Integer>();
+		//List<Integer> retornoCamadaOculta = new ArrayList<Integer>();
 		List<Integer> retornoCamadaSaida = new ArrayList<Integer>();
 
 		// ENTRA COM A LETRA NOS NEURÔNIOS DA CAMADA DE ENTRADA
@@ -115,11 +116,11 @@ public class RedeMLP {
 			System.out.println("\n*** TREINANDO LETRA A ***");
 			treinaLetra(letraA);
 			
-			// LETRA B = 0 0 0 0 1
-			System.out.println("\n*** TREINANDO LETRA B ***");
-			treinaLetra(letraB);
+//			// LETRA B = 0 0 0 0 1
+//			System.out.println("\n*** TREINANDO LETRA B ***");
+//			treinaLetra(letraB);
 			
-			if(testaRede(letraA) && testaRede(letraB))
+			if(testaRede(letraA))
 				break;
 			
 		} while (true);
@@ -172,7 +173,7 @@ public class RedeMLP {
 
 			}
 
-			// ENTRA COM OS VALORES DA CAMADA OCULTA NA CAMADA DE SAIDA
+			// ENTRA COM OS VALORES NA CAMADA DE SAIDA
 			for (NeuronioSaida neuronioSaida : camadaSaida.getListaNeuronios()) {
 
 				Integer v = neuronioSaida.calculaY(1, retornoCamadaEntrada);
@@ -228,7 +229,7 @@ public class RedeMLP {
 				Double pesosAntigos[] = neuronioSaida.getW();
 				
 				pesosAjustados[0] = pesosAntigos[0] + pesosAjustados[0];
-//				pesosAjustados[1] = pesosAntigos[1] + pesosAjustados[1];
+				pesosAjustados[1] = pesosAntigos[1] + pesosAjustados[1];
 //				pesosAjustados[2] = pesosAntigos[2] + pesosAjustados[2];
 //				pesosAjustados[3] = pesosAntigos[3] + pesosAjustados[3];
 //				pesosAjustados[4] = pesosAntigos[4] + pesosAjustados[4];
@@ -249,6 +250,7 @@ public class RedeMLP {
 			for (NeuronioSaida neuronioSaida : camadaSaida.getListaNeuronios()) {
 				
 				somatorioPesos += (gradientesSaida.get(i) * neuronioSaida.getW()[0] );
+				somatorioPesos += (gradientesSaida.get(i) * neuronioSaida.getW()[1] );
 				i++;
 			}
 			
@@ -286,10 +288,10 @@ public class RedeMLP {
 	
 	private static Double[] ajustaPesos (Double gradiente, Integer retornoCamadaSaida){
 		
-		Double pesos[] = new Double[9];
+		Double pesos[] = new Double[2];
 		
 		pesos[0] = gradiente * ETA * retornoCamadaSaida;
-//		pesos[1] = gradiente * eta * retornoCamadaSaida;
+		pesos[1] = gradiente * ETA * retornoCamadaSaida;
 //		pesos[2] = gradiente * eta * retornoCamadaSaida;
 //		pesos[3] = gradiente * eta * retornoCamadaSaida;
 //		pesos[4] = gradiente * eta * retornoCamadaSaida;
