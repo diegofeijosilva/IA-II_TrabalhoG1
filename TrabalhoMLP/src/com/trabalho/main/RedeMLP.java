@@ -25,12 +25,12 @@ public class RedeMLP {
 			letraW, letraX, letraY;
 
 	// eta é a constante (taxa) de aprendizagem
-	private static double eta = 0.05;
+	private static double ETA = 0.05;
 
 	// CONSTANTE DE TREINAMENTO
 	private static int CONSTANTE_DE_TREINAMENTO = 1000;
 	
-	private static double ERRO_INSTANTANEO = 0.5;
+	private static double ERRO_INSTANTANEO = 0.1;
 
 	private static String DIRETORIO_EXEMPLOS = "Resource/Exemplos/";
 
@@ -42,19 +42,18 @@ public class RedeMLP {
 		// FAZ A LEITURA DOS ARQUIVOS E CRIA OS OBJETOS COM AS LETRAS
 		inicializaLetras();
 
+		// TREINA A REDE COM AS LETRAS
 		treinarRede();
 
+		testaRede(letraA);
+		
 	}
 
-	private static void treinarRede() {
+	private static boolean testaRede(Letra letra) {
 
-		// LETRA A = 0 0 0 0 0
-		treinaLetra(letraA);
-
-	}
-
-	private static void treinaLetra(Letra letra) {
-
+		String bitsLetra[] = letra.getBits().split(";");
+		
+		// ENTRA COM A LETRA NA REDE
 		List<Integer> retornoCamadaEntrada = new ArrayList<Integer>();
 		List<Integer> retornoCamadaOculta = new ArrayList<Integer>();
 		List<Integer> retornoCamadaSaida = new ArrayList<Integer>();
@@ -68,15 +67,6 @@ public class RedeMLP {
 
 		}
 
-//		// ENTRA COM OS VALORES DA CAMADA DE ENTRADA NA CAMADA OCULTA
-//		for (NeuronioOculta neuronioOculta : camadaOculta.getListaNeuronios()) {
-//
-//			Integer v = neuronioOculta.calculaY(1, retornoCamadaEntrada);
-//
-//			retornoCamadaOculta.add(v);
-//
-//		}
-
 		// ENTRA COM OS VALORES DA CAMADA OCULTA NA CAMADA DE SAIDA
 		for (NeuronioSaida neuronioSaida : camadaSaida.getListaNeuronios()) {
 
@@ -86,53 +76,211 @@ public class RedeMLP {
 
 		}
 		
-		List<Double> listaErros = new ArrayList<Double>();
+		System.out.println("\nRESULTADO: ");
 		
-		listaErros.add((double) (0 - retornoCamadaSaida.get(0)));
-		listaErros.add((double) (0 - retornoCamadaSaida.get(1)));
-		listaErros.add((double) (0 - retornoCamadaSaida.get(2)));
-		listaErros.add((double) (0 - retornoCamadaSaida.get(3)));
-		listaErros.add((double) (0 - retornoCamadaSaida.get(4)));
-		
-		/* Calcular a energia do erro instantâneopara*/
-		
-		/* Calcular os gradientes da camada de saída. */
-		
-		List<Double> gradientesSaida = new ArrayList<Double>();
-		
-		gradientesSaida.add(ERRO_INSTANTANEO * listaErros.get(0));
-		gradientesSaida.add(ERRO_INSTANTANEO * listaErros.get(1));
-		gradientesSaida.add(ERRO_INSTANTANEO * listaErros.get(2));
-		gradientesSaida.add(ERRO_INSTANTANEO * listaErros.get(3));
-		gradientesSaida.add(ERRO_INSTANTANEO * listaErros.get(4));		
+		// VERIFICA SE CONVERGIU
+		if(retornoCamadaSaida.get(0) == Integer.parseInt(bitsLetra[0])
+				&& retornoCamadaSaida.get(1) == Integer.parseInt(bitsLetra[1])
+				&& retornoCamadaSaida.get(2) == Integer.parseInt(bitsLetra[2])
+				&& retornoCamadaSaida.get(3) == Integer.parseInt(bitsLetra[3])
+				&& retornoCamadaSaida.get(4) == Integer.parseInt(bitsLetra[4]) ){
+			
+			System.out.println("Padrão: " + retornoCamadaSaida);
+			System.out.println("REDE ENCONTROU A LETRA");
 
-		/* Calcular o ajuste dos pesos de k */
-
-		int i=0;
-		for (NeuronioSaida neuronioSaida : camadaSaida.getListaNeuronios()) {
-			
-			Double w0 = gradientesSaida.get(i) * eta * 1;
-			
-			neuronioSaida.setW0(w0);
-			
-			Double pesosAjustados[] = ajustaPesos(gradientesSaida.get(i), retornoCamadaSaida.get(i));
-			Double pesosAntigos[] = neuronioSaida.getW();
-			
-			pesosAjustados[0] = pesosAntigos[0] + pesosAjustados[0];
-//			pesosAjustados[1] = pesosAntigos[1] + pesosAjustados[1];
-//			pesosAjustados[2] = pesosAntigos[2] + pesosAjustados[2];
-//			pesosAjustados[3] = pesosAntigos[3] + pesosAjustados[3];
-//			pesosAjustados[4] = pesosAntigos[4] + pesosAjustados[4];
-//			pesosAjustados[5] = pesosAntigos[5] + pesosAjustados[5];
-//			pesosAjustados[6] = pesosAntigos[6] + pesosAjustados[6];
-//			pesosAjustados[7] = pesosAntigos[7] + pesosAjustados[7];
-//			pesosAjustados[8] = pesosAntigos[8] + pesosAjustados[8];
-			
-			neuronioSaida.setW(pesosAjustados);
-			
-			i++;
-
+			return true;
 		}
+		else {
+			System.out.println("RETORNO DA REDE: " + retornoCamadaSaida);
+			System.out.println("LETRA NÃO RECONHECIDA");
+			return false;
+		}
+		
+	}
+
+	private static void treinarRede() {
+		
+		int treino=-1;
+		
+		// TREINA ATÉ RECONHECER AS 2 LETRAS
+		do {
+			
+			treino++;
+			if(treino == CONSTANTE_DE_TREINAMENTO){ 
+				System.out.println("REDE NÃO CONVERGIU!");
+				break;
+			}
+			
+			// LETRA A = 0 0 0 0 0
+			System.out.println("\n*** TREINANDO LETRA A ***");
+			treinaLetra(letraA);
+			
+			// LETRA B = 0 0 0 0 1
+			System.out.println("\n*** TREINANDO LETRA B ***");
+			treinaLetra(letraB);
+			
+			if(testaRede(letraA) && testaRede(letraB))
+				break;
+			
+		} while (true);
+
+		
+		
+//		// LETRA C = 0 0 0 1 0
+//		System.out.println("\n*** TREINANDO LETRA C ***");
+//		treinaLetra(letraC);
+//
+//		// LETRA D = 0 0 0 1 1
+//		System.out.println("\n*** TREINANDO LETRA D ***");
+//		treinaLetra(letraD);
+//
+//		// LETRA E = 0 0 1 0 0
+//		System.out.println("\n*** TREINANDO LETRA E ***");
+//		treinaLetra(letraE);
+//
+//		// Letra F = 0 0 1 0 1
+//		System.out.println("\n*** TREINANDO LETRA F ***");
+//		treinaLetra(letraF);
+//		
+//		System.out.println("\n*** TREINANDO LETRA G ***");
+//		treinaLetra(letraG);
+//		
+//		System.out.println("\n*** TREINANDO LETRA H ***");
+//		treinaLetra(letraH);
+
+	}
+
+	private static void treinaLetra(Letra letra) {
+		
+		int epocas=0;
+		String bitsLetra[] = letra.getBits().split(";");
+		
+		do {
+			
+			//System.out.println("\nEPOCA: " + epocas);
+			
+			List<Integer> retornoCamadaEntrada = new ArrayList<Integer>();
+			List<Integer> retornoCamadaOculta = new ArrayList<Integer>();
+			List<Integer> retornoCamadaSaida = new ArrayList<Integer>();
+
+			// ENTRA COM A LETRA NOS NEURÔNIOS DA CAMADA DE ENTRADA
+			for (NeuronioEntrada neuronioEntrada : camadaEntrada.getListaNeuronios()) {
+
+				Integer v = neuronioEntrada.calculaY(1, letra.getLetra());
+
+				retornoCamadaEntrada.add(v);
+
+			}
+
+			// ENTRA COM OS VALORES DA CAMADA OCULTA NA CAMADA DE SAIDA
+			for (NeuronioSaida neuronioSaida : camadaSaida.getListaNeuronios()) {
+
+				Integer v = neuronioSaida.calculaY(1, retornoCamadaEntrada);
+
+				retornoCamadaSaida.add(v);
+
+			}
+			
+			// VERIFICA SE CONVERGIU
+			if(retornoCamadaSaida.get(0) == Integer.parseInt(bitsLetra[0])
+					&& retornoCamadaSaida.get(1) == Integer.parseInt(bitsLetra[1])
+					&& retornoCamadaSaida.get(2) == Integer.parseInt(bitsLetra[2])
+					&& retornoCamadaSaida.get(3) == Integer.parseInt(bitsLetra[3])
+					&& retornoCamadaSaida.get(4) == Integer.parseInt(bitsLetra[4]) ){
+				
+				System.out.println("\nPadrão: " + retornoCamadaSaida);
+				System.out.println("REDE ENCONTROU A LETRA");
+				System.out.println("EPOCAS NECESSÁRIAS: " + epocas);
+				
+				break;
+			}
+			
+			List<Double> listaErros = new ArrayList<Double>();
+			
+			listaErros.add((double) (Integer.parseInt(bitsLetra[0]) - retornoCamadaSaida.get(0)));
+			listaErros.add((double) (Integer.parseInt(bitsLetra[1]) - retornoCamadaSaida.get(1)));
+			listaErros.add((double) (Integer.parseInt(bitsLetra[2]) - retornoCamadaSaida.get(2)));
+			listaErros.add((double) (Integer.parseInt(bitsLetra[3]) - retornoCamadaSaida.get(3)));
+			listaErros.add((double) (Integer.parseInt(bitsLetra[4]) - retornoCamadaSaida.get(4)));
+			
+			/* Calcular a energia do erro instantâneopara*/
+			
+			/* Calcular os gradientes da camada de saída. */
+			
+			List<Double> gradientesSaida = new ArrayList<Double>();
+			
+			gradientesSaida.add(ERRO_INSTANTANEO * listaErros.get(0));
+			gradientesSaida.add(ERRO_INSTANTANEO * listaErros.get(1));
+			gradientesSaida.add(ERRO_INSTANTANEO * listaErros.get(2));
+			gradientesSaida.add(ERRO_INSTANTANEO * listaErros.get(3));
+			gradientesSaida.add(ERRO_INSTANTANEO * listaErros.get(4));		
+
+			/* Calcular o ajuste dos pesos de k */
+
+			int i=0;
+			for (NeuronioSaida neuronioSaida : camadaSaida.getListaNeuronios()) {
+				
+				Double w0 = gradientesSaida.get(i) * ETA * 1;
+				
+				neuronioSaida.setW0(w0);
+				
+				Double pesosAjustados[] = ajustaPesos(gradientesSaida.get(i), retornoCamadaSaida.get(i));
+				Double pesosAntigos[] = neuronioSaida.getW();
+				
+				pesosAjustados[0] = pesosAntigos[0] + pesosAjustados[0];
+//				pesosAjustados[1] = pesosAntigos[1] + pesosAjustados[1];
+//				pesosAjustados[2] = pesosAntigos[2] + pesosAjustados[2];
+//				pesosAjustados[3] = pesosAntigos[3] + pesosAjustados[3];
+//				pesosAjustados[4] = pesosAntigos[4] + pesosAjustados[4];
+//				pesosAjustados[5] = pesosAntigos[5] + pesosAjustados[5];
+//				pesosAjustados[6] = pesosAntigos[6] + pesosAjustados[6];
+//				pesosAjustados[7] = pesosAntigos[7] + pesosAjustados[7];
+//				pesosAjustados[8] = pesosAntigos[8] + pesosAjustados[8];
+				
+				neuronioSaida.setW(pesosAjustados);
+				
+				i++;
+
+			}
+			
+			// SOMATÓRIO PESOS
+			Double somatorioPesos=(double) 0;
+			i = 0;
+			for (NeuronioSaida neuronioSaida : camadaSaida.getListaNeuronios()) {
+				
+				somatorioPesos += (gradientesSaida.get(i) * neuronioSaida.getW()[0] );
+				i++;
+			}
+			
+			
+			System.out.println("SOMATÓRIO PESOS: " + somatorioPesos);
+			
+			Double g1 = somatorioPesos * ERRO_INSTANTANEO;
+			
+			
+			for (NeuronioEntrada neuronioEntrada : camadaEntrada.getListaNeuronios()) {
+				
+				Double pesosAjustados[] = new Double[64];
+				Double pesosAtuais[] = neuronioEntrada.getW();
+				i=0;
+				
+				for(i=0; i < pesosAtuais.length; i++){
+					pesosAjustados[i] = g1 * ETA * pesosAtuais[i];
+				}
+				
+				neuronioEntrada.setW(pesosAjustados);
+				
+			}
+				
+//			for (Integer double1 : retornoCamadaSaida) {
+//				System.out.println("Saida: " + double1);
+//			}
+			
+			epocas++;
+			
+		} while (true);
+		
+		
 		
 	}
 	
@@ -140,7 +288,7 @@ public class RedeMLP {
 		
 		Double pesos[] = new Double[9];
 		
-		pesos[0] = gradiente * eta * retornoCamadaSaida;
+		pesos[0] = gradiente * ETA * retornoCamadaSaida;
 //		pesos[1] = gradiente * eta * retornoCamadaSaida;
 //		pesos[2] = gradiente * eta * retornoCamadaSaida;
 //		pesos[3] = gradiente * eta * retornoCamadaSaida;

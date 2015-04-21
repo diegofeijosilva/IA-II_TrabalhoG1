@@ -19,7 +19,7 @@ public class NeuronioEntrada {
 		
 	}
 
-	public double calculaVk(double x0, Integer x[][]) {
+	private double calculaVk(double x0, Integer x[][]) {
 		
 		Double soma = (double) 0;
 		int posW = -1;
